@@ -5,20 +5,20 @@ module TradeApi
     class Ticker
       include Common
 
-      attr_reader :ticker
+      attr_reader :ticker_map
 
       def initialize(client)
         @client = client
-        @ticker = {}
+        @ticker_map = {}
       end
 
       def pairs
-        blank? ? [] : @ticker.values
+        @ticker_map.empty? ? [] : @ticker_map.values
       end
 
       def update!
-        @ticker = @client.get_ticker
-        @ticker.select! do |pair|
+        @ticker_map = @client.get_ticker
+        @ticker_map.select! do |pair|
           pair[:MarketName].match('BTC-')
         end
         add_calculated_fields!
@@ -26,7 +26,7 @@ module TradeApi
       end
 
       def calculate_change_values!(last_ticker)
-        @ticker.each do |name, pair|
+        @ticker_map.each do |name, pair|
           last_pair = last_ticker[name.to_sym]
           if last_pair
             CHANGE_FIELDS.each do |field|
@@ -48,7 +48,7 @@ module TradeApi
       private
 
       def to_hash!
-        @ticker = @ticker.each_with_object({}) { |pair, result| result[pair[:name]] = pair }
+        @ticker_map = @ticker_map.each_with_object({}) { |pair, result| result[pair[:name]] = pair }
       end
 
       def pair_spread(pair)
@@ -60,7 +60,7 @@ module TradeApi
       end
 
       def add_calculated_fields!
-        @ticker.map! do |pair|
+        @ticker_map.map! do |pair|
           BTC_FIELDS.each do |field|
             pair[field] = satochi pair[field]
           end
