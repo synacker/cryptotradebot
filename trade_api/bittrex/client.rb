@@ -15,11 +15,11 @@ module TradeApi
       end
 
       def create_buy_orders(orders)
-        #create_orders :buy, orders
+        create_orders :buy, orders
       end
 
       def create_sell_orders(orders)
-        #create_orders :sell, orders
+        create_orders :sell, orders
       end
 
 

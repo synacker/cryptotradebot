@@ -27,6 +27,7 @@ module TradeApi
           order
         end
 
+
         @client.create_buy_orders buy_orders
       end
 
@@ -45,14 +46,6 @@ module TradeApi
         end
 
         @client.create_sell_orders sell_orders
-      end
-
-      private
-
-      def market_names(actives)
-        actives.map do |active|
-          'BTC-' + active[:Currency]
-        end
       end
     end
   end

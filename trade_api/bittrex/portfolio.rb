@@ -44,8 +44,6 @@ module TradeApi
         @actives.size
       end
 
-      private
-
       def sell_balance!(ticker, commission)
         @sell_balance = 0
         @actives.keys.each do |currency_name|
