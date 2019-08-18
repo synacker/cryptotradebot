@@ -3,13 +3,14 @@ require 'bundler/setup'
 
 Bundler.require(:default)
 
+require_relative 'bots/bittrex'
+
 namespace :app do
   bot = Bittrex::Bot.new ENV.fetch('BITTREX_KEY'),
                          ENV.fetch('BITTREX_SECRET')
   desc 'Turn profit balance strategy'
   task :turn do
     Sequel::Model.db = Sequel.connect ENV.fetch('DATABASE_URL')
-    require_relative 'bots/bittrex'
     require_relative 'db/models/bittrex_ticker'
     tickers = Models::BittrexTicker.new
     bot.turn_profit_balance_strategy!(tickers)
