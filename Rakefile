@@ -3,9 +3,9 @@ require 'bundler/setup'
 
 Bundler.require(:default)
 
-require_relative 'bots/bittrex'
 
 namespace :app do
+  require_relative 'bots/bittrex'
   bot = Bittrex::Bot.new ENV.fetch('BITTREX_KEY'),
                          ENV.fetch('BITTREX_SECRET')
   desc 'Turn profit balance strategy'
