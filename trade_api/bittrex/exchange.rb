@@ -35,8 +35,7 @@ module TradeApi
         @client.cancel_all_orders
       end
 
-      def sell_by_current_bid(actives, markdown = -1)
-        markets = market_names actives
+      def sell_by_current_bid(markets, markdown = -1)
         sell_orders = @client.markets_info(markets).map do |market|
           order = {}
           order[:market] = market[:MarketName]

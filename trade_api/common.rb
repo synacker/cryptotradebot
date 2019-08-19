@@ -24,12 +24,6 @@ module TradeApi
       market_name.split('-').last.to_sym
     end
 
-    def market_names(actives)
-      actives.values.map do |active|
-        "BTC-#{active[:Currency].to_s}"
-      end
-    end
-
     def spread(old_value, new_value)
       (old_value.to_f - new_value) / old_value * 100
     end

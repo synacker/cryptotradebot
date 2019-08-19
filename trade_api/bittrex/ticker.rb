@@ -22,6 +22,7 @@ module TradeApi
           pair[:MarketName].match('BTC-')
         end
         add_calculated_fields!
+        add_trade_volumes_to_ticker!
         to_hash!
       end
 
@@ -46,6 +47,28 @@ module TradeApi
       end
 
       private
+
+      def add_trade_volumes_to_ticker!
+        orders = @client.get_order_books(@ticker_map.map { |pair| pair[:MarketName].to_sym })
+        @ticker_map.map! do |pair|
+          pair_orders = orders[pair[:MarketName].to_sym]
+          %i[buy sell].each do |field|
+            pair["#{field}_volume".to_sym] = calculate_order_volume field,
+                                                                    pair_orders
+          end
+          pair
+        end
+
+        @ticker_map
+      end
+
+      def calculate_order_volume(order_type, orders)
+        volume = 0
+        orders[order_type].each do |order|
+          volume += order[:Quantity] * satochi(order[:Rate])
+        end
+        volume
+      end
 
       def to_hash!
         @ticker_map = @ticker_map.each_with_object({}) { |pair, result| result[pair[:name]] = pair }

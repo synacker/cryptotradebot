@@ -55,15 +55,18 @@ module Bittrex
         profit_balance = sell_balance
       elsif sell_balance < profit_balance && sell_balance > start_balance
         @exchange.cancel_all_orders
-        @exchange.sell_by_current_bid @portfolio.actives
+        sell_markets = @portfolio.actives.values.map do |active|
+          "BTC-#{active[:Currency].to_s}"
+        end
+        @exchange.sell_by_current_bid sell_markets
         start_balance = sell_balance
         profit_balance = sell_balance + 1
       elsif !last_ticker.empty?
-        invest_pairs = find_invest_markets
+        invest_markets = find_invest_markets
         free_holds_count = MAX_HOLDS_COUNT - @portfolio.holds_count
-        invest_pairs = invest_pairs[0...free_holds_count] if invest_pairs.size > free_holds_count
+        invest_markets = invest_markets[0...free_holds_count] if invest_markets.size > free_holds_count
 
-        @exchange.buy invest_pairs, @portfolio.deposit / free_holds_count if invest_pairs.size.positive?
+        @exchange.buy invest_markets, @portfolio.deposit / free_holds_count if invest_markets.size.positive?
       end
 
       tickers.save_record @current_ticker.ticker_map.to_json, start_balance, profit_balance
@@ -88,6 +91,14 @@ module Bittrex
       @current_ticker.pairs
           .select {|pair| !@portfolio.has?(pair[:name]) && invest_pair?(pair)}
           .map {|pair| pair[:MarketName]}
+    end
+
+    def calculate_order_volume(order_type, orders)
+      volume = 0
+      orders[order_type].each do |order|
+        volume += order[:Quantity] * satochi(order[:Rate])
+      end
+      volume
     end
 
     BUY_POSITIVE_CHANGES = %i[OpenBuyOrders_change buy_volume_change orders_change Bid_change Ask_change Last_change BaseVolume_change].freeze
