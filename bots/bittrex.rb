@@ -60,7 +60,7 @@ module Bittrex
         free_holds_count = MAX_HOLDS_COUNT - @portfolio.holds_count
         invest_markets = invest_markets[0...free_holds_count] if invest_markets.size > free_holds_count
 
-        @exchange.buy invest_markets, @portfolio.deposit / free_holds_count if invest_markets.size.positive?
+        @exchange.buy invest_markets, @portfolio.deposit / free_holds_count, BITTREX_COMMISSION if invest_markets.size.positive?
       end
 
       tickers.save_record @current_ticker.ticker_map.to_json, start_balance, profit_balance

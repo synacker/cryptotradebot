@@ -18,12 +18,13 @@ module TradeApi
         end
       end
 
-      def buy(markets, active_deposit, markup = 1)
+      def buy(markets, active_deposit, commission, markup = 1)
+        active_deposit = active_deposit / (1 + commission)
         buy_orders = @client.markets_info(markets).map do |market|
           order = {}
           order[:market] = market[:MarketName]
           order[:rate] = market[:Ask] + bitcoin(markup)
-          order[:quantity] = active_deposit / satochi(order[:rate])
+          order[:quantity] = active_deposit.to_f / satochi(order[:rate])
           order
         end
 
