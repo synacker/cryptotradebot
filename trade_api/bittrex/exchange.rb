@@ -35,8 +35,11 @@ module TradeApi
         @client.cancel_all_orders
       end
 
-      def sell_by_current_bid(markets, markdown = -1)
-        sell_orders = @client.markets_info(markets).map do |market|
+      def sell_by_current_bid(actives, markdown = -1)
+        sell_markets = @portfolio.actives.values.map do |active|
+          "BTC-#{active[:Currency].to_s}"
+        end
+        sell_orders = @client.markets_info(sell_markets).map do |market|
           order = {}
           order[:market] = market[:MarketName]
           order[:rate] = market[:Bid] + bitcoin(markdown)

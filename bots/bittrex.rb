@@ -22,7 +22,7 @@ module Bittrex
 
       current_ticker.update!
 
-      portfolio.update!(current_ticker.ticker_map, BITTREX_COMMISSION)
+      portfolio.update!
       exchange.update!
 
       exchange.cancel_all_orders
@@ -35,7 +35,7 @@ module Bittrex
       @current_ticker.update!
       @current_ticker.calculate_change_values! last_ticker if last_ticker
 
-      @portfolio.update!(@current_ticker.ticker_map, BITTREX_COMMISSION)
+      @portfolio.update!
       @exchange.update!
 
       if start_balance.zero?
@@ -43,10 +43,10 @@ module Bittrex
         profit_balance = start_balance + 1
       end
 
-      sell_balance = @portfolio.sell_balance
+      sell_balance = @portfolio.sell_balance(@current_ticker.ticker_map, BITTREX_COMMISSION)
 
       puts "Deposit: #{@portfolio.deposit}"
-      puts "Sell balance: #{@portfolio.sell_balance}"
+      puts "Sell balance: #{sell_balance}"
       puts "Start balance: #{start_balance}"
       puts "Profit balance: #{profit_balance}"
       puts @portfolio.actives.to_json
@@ -55,10 +55,7 @@ module Bittrex
         profit_balance = sell_balance
       elsif sell_balance < profit_balance && sell_balance > start_balance
         @exchange.cancel_all_orders
-        sell_markets = @portfolio.actives.values.map do |active|
-          "BTC-#{active[:Currency].to_s}"
-        end
-        @exchange.sell_by_current_bid sell_markets
+        @exchange.sell_by_current_bid @portfolio.actives
         start_balance = sell_balance
         profit_balance = sell_balance + 1
       elsif !last_ticker.empty?

@@ -25,7 +25,7 @@ module TradeApi
         has?(currency_name) ? @actives[currency_name][:Available] : 0
       end
 
-      def update!(ticker_hash, commission)
+      def update!
         @actives = {}
         @deposit = 0
         @client.get_balances.each do |balance|
@@ -37,20 +37,19 @@ module TradeApi
             @actives[active_name] = balance if balance_value.positive?
           end
         end
-        sell_balance!(ticker_hash, commission)
       end
 
       def holds_count
         @actives.size
       end
 
-      def sell_balance!(ticker, commission)
-        @sell_balance = 0
+      def sell_balance(ticker, commission)
+        sell_balance = 0
         @actives.keys.each do |currency_name|
           @sell_balance += revenue(available(currency_name) * ticker[currency_name][:Bid], commission)
         end
-        @sell_balance += deposit
-        @sell_balance
+        sell_balance += deposit
+        sell_balance
       end
     end
   end
