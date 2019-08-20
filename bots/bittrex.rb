@@ -16,11 +16,8 @@ module Bittrex
     end
 
     def sell_all
-      current_ticker = TradeApi::Bittrex::Ticker.new @client
       portfolio = TradeApi::Bittrex::Portfolio.new @client
       exchange = TradeApi::Bittrex::Exchange.new @client
-
-      current_ticker.update!
 
       portfolio.update!
       exchange.update!
