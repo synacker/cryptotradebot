@@ -36,7 +36,7 @@ module TradeApi
       end
 
       def sell_by_current_bid(actives, markdown = -1)
-        sell_markets = @portfolio.actives.values.map do |active|
+        sell_markets = actives.values.map do |active|
           "BTC-#{active[:Currency].to_s}"
         end
         sell_orders = @client.markets_info(sell_markets).map do |market|
