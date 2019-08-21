@@ -7,14 +7,12 @@ module TradeApi
       include Common
 
       attr_reader :actives
-      attr_reader :sell_balance
       attr_reader :deposit
 
       def initialize(client)
         @client = client
         @actives = {}
         @deposit = 0
-        @sell_balance = 0
       end
 
       def has?(currency_name)
@@ -46,7 +44,7 @@ module TradeApi
       def sell_balance(ticker, commission)
         sell_balance = 0
         @actives.keys.each do |currency_name|
-          @sell_balance += revenue(available(currency_name) * ticker[currency_name][:Bid], commission)
+          sell_balance += revenue(available(currency_name) * ticker[currency_name][:Bid], commission)
         end
         sell_balance += deposit
         sell_balance
