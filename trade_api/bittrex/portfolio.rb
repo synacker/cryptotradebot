@@ -44,10 +44,10 @@ module TradeApi
       def sell_balance(ticker, commission)
         sell_balance = 0
         @actives.keys.each do |currency_name|
-          sell_balance += revenue(available(currency_name) * ticker[currency_name][:Bid], commission)
+          sell_balance += revenue(available(currency_name) * ticker[currency_name][:Bid], commission).to_i
         end
         sell_balance += deposit
-        sell_balance.to_i
+        sell_balance
       end
     end
   end
