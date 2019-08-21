@@ -47,7 +47,7 @@ module TradeApi
           sell_balance += revenue(available(currency_name) * ticker[currency_name][:Bid], commission)
         end
         sell_balance += deposit
-        sell_balance
+        sell_balance.to_i
       end
     end
   end
