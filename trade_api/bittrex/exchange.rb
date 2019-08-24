@@ -20,6 +20,7 @@ module TradeApi
 
       def buy(markets, active_deposit, commission, markup = 0)
         active_deposit = active_deposit / (1 + commission)
+        active_deposit = active_deposit.to_i
         buy_orders = @client.markets_info(markets).map do |market|
           order = {}
           order[:market] = market[:MarketName]
