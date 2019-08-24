@@ -18,7 +18,7 @@ module TradeApi
         end
       end
 
-      def buy(markets, active_deposit, commission, markup = 1)
+      def buy(markets, active_deposit, commission, markup = 0)
         active_deposit = active_deposit / (1 + commission)
         buy_orders = @client.markets_info(markets).map do |market|
           order = {}
@@ -36,7 +36,7 @@ module TradeApi
         @client.cancel_all_orders
       end
 
-      def sell_by_current_bid(actives, markdown = -1)
+      def sell_by_current_bid(actives, markdown = 0)
         sell_markets = actives.values.map do |active|
           "BTC-#{active[:Currency].to_s}"
         end
