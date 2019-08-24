@@ -98,7 +98,7 @@ module Bittrex
     BUY_POSITIVE_CHANGES = %i[OpenBuyOrders_change buy_volume_change orders_change Bid_change High_change Ask_change Last_change BaseVolume_change].freeze
     SELL_NEGATIVE_CHANGES = %i[OpenSellOrders_change sell_volume_change spread_change].freeze
 
-    MAX_HOLDS_COUNT = 6
+    MAX_HOLDS_COUNT = 3
 
     BITTREX_COMMISSION = 0.0025
 
