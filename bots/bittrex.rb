@@ -48,10 +48,11 @@ module Bittrex
       puts "Profit balance: #{profit_balance}"
       puts @portfolio.actives.to_json
 
+      @exchange.cancel_all_orders
+
       if sell_balance > profit_balance
         profit_balance = sell_balance
       elsif sell_balance < profit_balance && sell_balance > start_balance
-        @exchange.cancel_all_orders
         @exchange.sell_by_current_bid @portfolio.actives
         start_balance = sell_balance
         profit_balance = sell_balance + 1
