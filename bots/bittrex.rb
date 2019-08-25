@@ -70,7 +70,7 @@ module Bittrex
     private
 
     def invest_pair?(pair)
-      result = true
+      result = pair[:BaseVolume] > MIN_VOLUME
 
       result &&= BUY_POSITIVE_CHANGES.all? do |field|
         pair[field].positive?
@@ -102,6 +102,7 @@ module Bittrex
     MAX_HOLDS_COUNT = 3
 
     BITTREX_COMMISSION = 0.0025
+    MIN_VOLUME = 1000_000_000
 
   end
 end
