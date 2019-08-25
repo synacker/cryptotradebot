@@ -88,14 +88,6 @@ module Bittrex
           .map {|pair| pair[:MarketName]}
     end
 
-    def calculate_order_volume(order_type, orders)
-      volume = 0
-      orders[order_type].each do |order|
-        volume += order[:Quantity] * satochi(order[:Rate])
-      end
-      volume
-    end
-
     BUY_POSITIVE_CHANGES = %i[OpenBuyOrders_change buy_volume_change orders_change Bid_change High_change Ask_change Last_change].freeze
     SELL_NEGATIVE_CHANGES = %i[].freeze
 
